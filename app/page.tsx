@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { WalletButton } from "./wallet/WalletButton";
 
 export default function Home() {
   return (
@@ -18,9 +19,7 @@ export default function Home() {
           <a href="#features" className="text-black hover:underline font-medium">Features</a>
           <a href="#how-it-works" className="text-black hover:underline font-medium">How It Works</a>
           <a href="#api" className="text-black hover:underline font-medium">API</a>
-          <button className="bg-black text-white px-6 py-2 rounded-full font-medium hover:bg-gray-800 transition">
-            Connect Wallet
-          </button>
+          <WalletButton />
         </nav>
       </header>
 
@@ -41,6 +40,9 @@ export default function Home() {
             <button className="bg-white text-black px-8 py-4 rounded-full text-lg font-semibold border-2 border-black hover:bg-gray-100 transition shadow-lg">
               View Documentation
             </button>
+          </div>
+          <div className="flex justify-center mt-6">
+            <WalletButton />
           </div>
         </div>
 
@@ -141,9 +143,7 @@ export default function Home() {
             <p className="text-black/70 text-lg mb-8">
               Connect your wallet and complete KYC to receive your soulbound verification NFT
             </p>
-            <button className="bg-black text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition shadow-lg">
-              Connect Wallet & Start
-            </button>
+            <WalletButton />
           </div>
         </section>
       </main>
