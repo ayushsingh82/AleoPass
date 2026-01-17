@@ -1,0 +1,23 @@
+# Build directory
+build/
+*.avm
+*.prover
+*.verifier
+
+# Leo lock file
+leo.lock
+
+# Environment files
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

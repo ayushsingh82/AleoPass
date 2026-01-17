@@ -1,12 +1,22 @@
 "use client";
 
-import React, { FC, useCallback } from "react";
+import React, { FC, useCallback, useEffect } from "react";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { useWalletModal } from "@demox-labs/aleo-wallet-adapter-reactui";
 
 export const WalletButton: FC = () => {
-  const { publicKey, disconnect, connecting } = useWallet();
+  const { publicKey, disconnect, connecting, wallet, connected } = useWallet();
   const { setVisible } = useWalletModal();
+
+  // Log wallet state for debugging
+  useEffect(() => {
+    console.log("Wallet state:", { 
+      publicKey, 
+      connecting, 
+      connected, 
+      wallet: wallet?.adapter?.name
+    });
+  }, [publicKey, connecting, connected, wallet]);
 
   const handleClick = useCallback(async () => {
     if (publicKey) {
@@ -17,6 +27,7 @@ export const WalletButton: FC = () => {
       }
     } else {
       // Open modal to select and connect wallet
+      console.log("Opening wallet selection modal");
       setVisible(true);
     }
   }, [publicKey, disconnect, setVisible]);

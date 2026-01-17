@@ -1,0 +1,7 @@
+{
+  "program": "aleopass.aleo",
+  "version": "1.0.0",
+  "description": "AleoPass - KYC Verification Soulbound NFT Program",
+  "license": "MIT",
+  "dependencies": {}
+}

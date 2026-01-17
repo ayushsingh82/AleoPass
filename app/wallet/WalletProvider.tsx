@@ -33,7 +33,12 @@ export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
       network={WalletAdapterNetwork.Testnet}
       autoConnect={false}
       onError={(error) => {
-        console.error("Wallet error:", error);
+        console.error("Wallet provider error:", error);
+        // Log detailed error info
+        if (error instanceof Error) {
+          console.error("Error message:", error.message);
+          console.error("Error stack:", error.stack);
+        }
       }}
     >
       <WalletModalProvider>
