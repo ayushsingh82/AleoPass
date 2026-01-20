@@ -3,6 +3,7 @@
 import React, { FC, useCallback, useEffect } from "react";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { useWalletModal } from "@demox-labs/aleo-wallet-adapter-reactui";
+import { DecryptPermission, WalletAdapterNetwork } from "@demox-labs/aleo-wallet-adapter-base";
 
 export const WalletButton: FC = () => {
   const { publicKey, disconnect, connecting, wallet, connected, connect } = useWallet();
@@ -31,7 +32,7 @@ export const WalletButton: FC = () => {
       if (wallet?.adapter && wallet.adapter.readyState === 'Installed') {
         console.log("Wallet detected, attempting direct connection");
         try {
-          await connect();
+          await connect(DecryptPermission.UponRequest, WalletAdapterNetwork.Testnet);
         } catch (error) {
           console.error("Direct connection failed, opening modal:", error);
           // Fallback to modal if direct connection fails

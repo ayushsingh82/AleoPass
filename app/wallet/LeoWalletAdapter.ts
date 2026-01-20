@@ -186,7 +186,7 @@ export class LeoWalletAdapter extends BaseMessageSignerWalletAdapter {
             if (!wallet || !this.publicKey) throw new WalletNotConnectedError();
             try {
                 const result = await wallet.requestTransaction(transaction);
-                return result.transactionId;
+                return result.transactionId || "";
             } catch (error: any) {
                 throw new WalletTransactionError(error?.message, error);
             }
@@ -202,7 +202,7 @@ export class LeoWalletAdapter extends BaseMessageSignerWalletAdapter {
             if (!wallet || !this.publicKey) throw new WalletNotConnectedError();
             try {
                 const result = await wallet.requestExecution(transaction);
-                return result.transactionId;
+                return result.transactionId || "";
             } catch (error: any) {
                 throw new WalletTransactionError(error?.message, error);
             }
@@ -218,7 +218,7 @@ export class LeoWalletAdapter extends BaseMessageSignerWalletAdapter {
             if (!wallet || !this.publicKey) throw new WalletNotConnectedError();
             try {
                 const result = await wallet.requestBulkTransactions(transactions);
-                return result.transactionIds;
+                return result.transactionIds || [];
             } catch (error: any) {
                 throw new WalletTransactionError(error?.message, error);
             }
@@ -234,7 +234,7 @@ export class LeoWalletAdapter extends BaseMessageSignerWalletAdapter {
             if (!wallet || !this.publicKey) throw new WalletNotConnectedError();
             try {
                 const result = await wallet.requestDeploy(deployment);
-                return result.transactionId;
+                return result.transactionId || "";
             } catch (error: any) {
                 throw new WalletTransactionError(error?.message, error);
             }
@@ -250,7 +250,7 @@ export class LeoWalletAdapter extends BaseMessageSignerWalletAdapter {
             if (!wallet || !this.publicKey) throw new WalletNotConnectedError();
             try {
                 const result = await wallet.transactionStatus(transactionId);
-                return result.status;
+                return result.status || "";
             } catch (error: any) {
                 throw new WalletTransactionError(error?.message, error);
             }
@@ -266,7 +266,7 @@ export class LeoWalletAdapter extends BaseMessageSignerWalletAdapter {
             if (!wallet || !this.publicKey) throw new WalletNotConnectedError();
             try {
                 const result = await wallet.transitionViewKeys(transactionId);
-                return result.viewKeys;
+                return result.viewKeys || [];
             } catch (error: any) {
                 throw new WalletTransactionError(error?.message, error);
             }

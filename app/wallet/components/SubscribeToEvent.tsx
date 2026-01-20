@@ -1,8 +1,7 @@
 "use client";
 
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
-import { LeoWalletAdapter } from "@demox-labs/aleo-wallet-adapter-leo";
-import React, { FC, useEffect, useCallback } from "react";
+import React, { FC, useEffect, useRef } from "react";
 
 interface SubscribeToEventProps {
   children?: React.ReactNode;
@@ -10,24 +9,45 @@ interface SubscribeToEventProps {
 
 export const SubscribeToEvent: FC<SubscribeToEventProps> = ({ children }) => {
   const { wallet, publicKey } = useWallet();
-
-  const handleAccountChange = useCallback(() => {
-    // Handle account change, reconnect
-    console.log("Account changed");
-  }, [wallet]);
+  const previousPublicKey = useRef<string | null>(null);
 
   useEffect(() => {
+    // Watch for publicKey changes to detect account changes
+    if (previousPublicKey.current !== null && previousPublicKey.current !== publicKey) {
+      // Handle account change
+      console.log("Account changed from", previousPublicKey.current, "to", publicKey);
+    }
+    previousPublicKey.current = publicKey || null;
+  }, [publicKey]);
+
+  // Listen to connect/disconnect events from the adapter
+  useEffect(() => {
     if (wallet?.adapter) {
-      (wallet.adapter as LeoWalletAdapter).on("accountChange", handleAccountChange);
-      // Removes event listener during component teardown
+      const handleConnect = () => {
+        console.log("Wallet connected");
+      };
+
+      const handleDisconnect = () => {
+        console.log("Wallet disconnected");
+      };
+
+      const handleError = (error: Error) => {
+        console.error("Wallet error:", error);
+      };
+
+      // Listen to standard adapter events
+      wallet.adapter.on("connect", handleConnect);
+      wallet.adapter.on("disconnect", handleDisconnect);
+      wallet.adapter.on("error", handleError);
+
+      // Cleanup
       return () => {
-        (wallet.adapter as LeoWalletAdapter).off(
-          "accountChange",
-          handleAccountChange
-        );
+        wallet.adapter.off("connect", handleConnect);
+        wallet.adapter.off("disconnect", handleDisconnect);
+        wallet.adapter.off("error", handleError);
       };
     }
-  }, [wallet, publicKey, handleAccountChange]);
+  }, [wallet]);
 
   return <>{children}</>;
 };
