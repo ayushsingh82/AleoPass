@@ -5,7 +5,7 @@ import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import { useWalletModal } from "@demox-labs/aleo-wallet-adapter-reactui";
 
 export const WalletButton: FC = () => {
-  const { publicKey, disconnect, connecting, wallet, connected } = useWallet();
+  const { publicKey, disconnect, connecting, wallet, connected, connect } = useWallet();
   const { setVisible } = useWalletModal();
 
   // Log wallet state for debugging
@@ -14,7 +14,8 @@ export const WalletButton: FC = () => {
       publicKey, 
       connecting, 
       connected, 
-      wallet: wallet?.adapter?.name
+      wallet: wallet?.adapter?.name,
+      readyState: wallet?.adapter?.readyState
     });
   }, [publicKey, connecting, connected, wallet]);
 
@@ -26,11 +27,23 @@ export const WalletButton: FC = () => {
         console.error("Error disconnecting wallet:", error);
       }
     } else {
-      // Open modal to select and connect wallet
-      console.log("Opening wallet selection modal");
-      setVisible(true);
+      // If wallet is detected and ready, try to connect directly
+      if (wallet?.adapter && wallet.adapter.readyState === 'Installed') {
+        console.log("Wallet detected, attempting direct connection");
+        try {
+          await connect();
+        } catch (error) {
+          console.error("Direct connection failed, opening modal:", error);
+          // Fallback to modal if direct connection fails
+          setVisible(true);
+        }
+      } else {
+        // Open modal to select and connect wallet
+        console.log("Opening wallet selection modal");
+        setVisible(true);
+      }
     }
-  }, [publicKey, disconnect, setVisible]);
+  }, [publicKey, disconnect, setVisible, wallet, connect]);
 
   return (
     <button

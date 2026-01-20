@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { WalletButton } from "./wallet/WalletButton";
 
 export default function Home() {
@@ -16,11 +17,15 @@ export default function Home() {
           <span className="text-2xl font-bold text-black">AleoPass</span>
         </div>
         <nav className="hidden md:flex items-center gap-8">
-          <a href="#features" className="text-black hover:underline font-medium">Features</a>
-          <a href="#how-it-works" className="text-black hover:underline font-medium">How It Works</a>
-          <a href="#api" className="text-black hover:underline font-medium">API</a>
+          <Link href="/check-status" className="text-black hover:underline font-medium cursor-pointer">Check Verify Status</Link>
+          <Link href="/verify" className="text-black hover:underline font-medium cursor-pointer">Verify</Link>
           <WalletButton />
         </nav>
+        <div className="md:hidden flex items-center gap-4">
+          <Link href="/check-status" className="text-black hover:underline font-medium text-sm cursor-pointer">Check Status</Link>
+          <Link href="/verify" className="text-black hover:underline font-medium text-sm cursor-pointer">Verify</Link>
+          <WalletButton />
+        </div>
       </header>
 
       {/* Hero Section */}
@@ -37,12 +42,6 @@ export default function Home() {
             <button className="bg-black text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-800 transition shadow-lg">
               Start KYC Verification
             </button>
-            <button className="bg-white text-black px-8 py-4 rounded-full text-lg font-semibold border-2 border-black hover:bg-gray-100 transition shadow-lg">
-              View Documentation
-            </button>
-          </div>
-          <div className="flex justify-center mt-6">
-            <WalletButton />
           </div>
         </div>
 
@@ -143,7 +142,6 @@ export default function Home() {
             <p className="text-black/70 text-lg mb-8">
               Connect your wallet and complete KYC to receive your soulbound verification NFT
             </p>
-            <WalletButton />
           </div>
         </section>
       </main>

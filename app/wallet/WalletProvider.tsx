@@ -3,7 +3,7 @@
 import React, { FC, useMemo, ReactNode } from "react";
 import { WalletProvider as AleoWalletProvider } from "@demox-labs/aleo-wallet-adapter-react";
 import { WalletModalProvider, WalletModal } from "@demox-labs/aleo-wallet-adapter-reactui";
-import { LeoWalletAdapter } from "@demox-labs/aleo-wallet-adapter-leo";
+import { LeoWalletAdapter } from "./LeoWalletAdapter";
 import {
   DecryptPermission,
   WalletAdapterNetwork,
@@ -39,6 +39,11 @@ export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
           console.error("Error message:", error.message);
           console.error("Error stack:", error.stack);
         }
+        // Log wallet state for debugging
+        console.error("Error details:", {
+          errorName: error?.constructor?.name,
+          errorMessage: error?.message,
+        });
       }}
     >
       <WalletModalProvider>

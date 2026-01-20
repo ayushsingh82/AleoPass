@@ -55,6 +55,30 @@ Each NFT can include:
 - Minting pipeline with proof polling (up to 5 minutes for proof generation)
 - Verification API and gallery display
 
+## Deployment
+
+The `nftkyc_v13.aleo` program has been deployed to Aleo Testnet.
+
+**Contract/Program Address:** `nftkyc_v13.aleo`
+
+**Deployment Transaction:** [View on Explorer](https://testnet.explorer.provable.com/transaction/at1pr48c4ay5yj8lhjpea0sdh7p0cfv0y5fs9730kztupzzdltuxsyqt6l9nn)
+
+**Program Page:** [View Program](https://testnet.explorer.provable.com/program/nftkyc_v13.aleo)
+
+**Network:** Testnet  
+**Status:** ✅ Deployed and Confirmed  
+**Transaction ID:** `at1pr48c4ay5yj8lhjpea0sdh7p0cfv0y5fs9730kztupzzdltuxsyqt6l9nn`
+
+**Important Addresses:**
+- **Contract Address (Program ID):** `nftkyc_v13.aleo` - This is the deployed program address
+- **Authorized Minter Address:** `aleo12v4hjyh4gmrlc57amxfeepfvmvdwmaskqczexfw2ctfa3hql7g9sukj33u` - This address has permission to mint KYC NFTs. This is hardcoded in the program and cannot be changed without redeploying.
+
+**Program Features:**
+- ARC721 compliant KYC NFT system
+- Soulbound NFTs (non-transferable)
+- 6-month expiry period
+- KYC levels: 1 (Basic), 2 (Intermediate), 3 (Enhanced)
+
 ## Getting Started
 
 First, install dependencies:

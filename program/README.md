@@ -4,7 +4,7 @@ This is the Leo program for AleoPass - a KYC Verification Protocol that mints so
 
 ## Program Overview
 
-The `aleopass.aleo` program implements a soulbound ARC-721 NFT system where:
+The `nftkyc_v12.aleo` program implements a soulbound ARC-721 NFT system where:
 
 - **Soulbound NFTs**: KYC verification records are bound to a specific address and cannot be transferred
 - **Deployer-only Minting**: Only the program deployer can mint new KYC verification NFTs
@@ -59,8 +59,32 @@ leo test
 ### Deploy the program:
 
 ```bash
-leo deploy
+leo deploy --broadcast --yes
 ```
+
+## Deployment
+
+The program `nftkyc_v13.aleo` has been deployed to Aleo Testnet.
+
+**Contract/Program Address:** `nftkyc_v13.aleo`
+
+**Deployment Transaction:** [View on Explorer](https://testnet.explorer.provable.com/transaction/at1pr48c4ay5yj8lhjpea0sdh7p0cfv0y5fs9730kztupzzdltuxsyqt6l9nn)
+
+**Program Page:** [View Program](https://testnet.explorer.provable.com/program/nftkyc_v13.aleo)
+
+**Network:** Testnet  
+**Status:** ✅ Deployed and Confirmed  
+**Transaction ID:** `at1pr48c4ay5yj8lhjpea0sdh7p0cfv0y5fs9730kztupzzdltuxsyqt6l9nn`
+
+**Important Addresses:**
+- **Contract Address (Program ID):** `nftkyc_v13.aleo` - This is the deployed program address on the blockchain
+- **Authorized Minter Address:** `aleo12v4hjyh4gmrlc57amxfeepfvmvdwmaskqczexfw2ctfa3hql7g9sukj33u` - This address has permission to call the `mint` function. This is hardcoded as a constant in the program and cannot be changed without redeploying the entire program.
+
+**Program Features:**
+- ARC721 compliant KYC NFT system
+- Soulbound NFTs (non-transferable)
+- 6-month expiry period
+- KYC levels: 1 (Basic), 2 (Intermediate), 3 (Enhanced)
 
 ## Usage
 

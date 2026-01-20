@@ -1,7 +1,8 @@
 {
-  "program": "aleopass.aleo",
+  "program": "nftkyc_v13.aleo",
   "version": "1.0.0",
   "description": "AleoPass - KYC Verification Soulbound NFT Program",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": null,
+  "dev_dependencies": null
 }
