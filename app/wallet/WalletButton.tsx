@@ -6,15 +6,18 @@ import { useWalletModal } from "@demox-labs/aleo-wallet-adapter-reactui";
 import { DecryptPermission, WalletAdapterNetwork } from "@demox-labs/aleo-wallet-adapter-base";
 
 export const WalletButton: FC = () => {
-  const { publicKey, disconnect, connecting, wallet, connected, connect } = useWallet();
+  // OLD: destructured wallet without select
+  // const { publicKey, disconnect, connecting, wallet, connected, connect } = useWallet();
+  // NEW: include select, wallets from useWallet
+  const { publicKey, disconnect, connecting, wallet, connected, connect, select, wallets } = useWallet();
   const { setVisible } = useWalletModal();
 
   // Log wallet state for debugging
   useEffect(() => {
-    console.log("Wallet state:", { 
-      publicKey, 
-      connecting, 
-      connected, 
+    console.log("Wallet state:", {
+      publicKey,
+      connecting,
+      connected,
       wallet: wallet?.adapter?.name,
       readyState: wallet?.adapter?.readyState
     });
@@ -28,11 +31,25 @@ export const WalletButton: FC = () => {
         console.error("Error disconnecting wallet:", error);
       }
     } else {
-      // If wallet is detected and ready, try to connect directly
+      // OLD: Direct connect without select, wrong network
+      // if (wallet?.adapter && wallet.adapter.readyState === 'Installed') {
+      //   await connect(DecryptPermission.UponRequest, WalletAdapterNetwork.Testnet);
+      // }
+
+      // NEW: Proper connection pattern from Salud - select wallet first, then connect
       if (wallet?.adapter && wallet.adapter.readyState === 'Installed') {
         console.log("Wallet detected, attempting direct connection");
         try {
-          await connect(DecryptPermission.UponRequest, WalletAdapterNetwork.Testnet);
+          // First select the Leo Wallet
+          const leoWallet = wallets.find(w => w.adapter.name === 'Leo Wallet');
+          if (leoWallet) {
+            await select(leoWallet.adapter.name);
+            // Then connect with proper parameters (TestnetBeta)
+            await connect(DecryptPermission.UponRequest, WalletAdapterNetwork.TestnetBeta);
+          } else {
+            console.log("Leo Wallet not found, opening modal");
+            setVisible(true);
+          }
         } catch (error) {
           console.error("Direct connection failed, opening modal:", error);
           // Fallback to modal if direct connection fails
@@ -44,7 +61,7 @@ export const WalletButton: FC = () => {
         setVisible(true);
       }
     }
-  }, [publicKey, disconnect, setVisible, wallet, connect]);
+  }, [publicKey, disconnect, setVisible, wallet, connect, select, wallets]);
 
   return (
     <button

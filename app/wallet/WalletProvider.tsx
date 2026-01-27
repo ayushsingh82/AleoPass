@@ -3,7 +3,10 @@
 import React, { FC, useMemo, ReactNode } from "react";
 import { WalletProvider as AleoWalletProvider } from "@demox-labs/aleo-wallet-adapter-react";
 import { WalletModalProvider, WalletModal } from "@demox-labs/aleo-wallet-adapter-reactui";
-import { LeoWalletAdapter } from "./LeoWalletAdapter";
+// OLD: Custom implementation - caused "invalid parameters" error
+// import { LeoWalletAdapter } from "./LeoWalletAdapter";
+// NEW: Use official Leo Wallet adapter package
+import { LeoWalletAdapter } from "@demox-labs/aleo-wallet-adapter-leo";
 import {
   DecryptPermission,
   WalletAdapterNetwork,
@@ -30,7 +33,9 @@ export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
     <AleoWalletProvider
       wallets={wallets}
       decryptPermission={DecryptPermission.UponRequest}
-      network={WalletAdapterNetwork.Testnet}
+      // OLD: WalletAdapterNetwork.Testnet - caused connection errors
+      // NEW: WalletAdapterNetwork.TestnetBeta - matches working Salud implementation
+      network={WalletAdapterNetwork.TestnetBeta}
       autoConnect={false}
       onError={(error) => {
         console.error("Wallet provider error:", error);
