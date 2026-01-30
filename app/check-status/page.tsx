@@ -1,14 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { WalletButton } from "../wallet/WalletButton";
+import { useState, useEffect } from "react";
+import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
+import Navigation from "../components/Navigation";
 
 export default function CheckStatusPage() {
+  const { publicKey } = useWallet();
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Auto-fill address when wallet is connected
+  useEffect(() => {
+    if (publicKey && !address) {
+      setAddress(publicKey);
+    }
+  }, [publicKey, address]);
 
   const handleCheckStatus = async () => {
     if (!address.trim()) {
@@ -42,24 +50,7 @@ export default function CheckStatusPage() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#C4FEC2' }}>
-      {/* Header */}
-      <header className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
-        <Link href="/" className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
-          <svg className="w-10 h-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="45" fill="black"/>
-            <path d="M30 65 L50 25 L70 65 Z" fill="#C4FEC2" stroke="#C4FEC2" strokeWidth="3" strokeLinejoin="round"/>
-            <circle cx="50" cy="55" r="8" fill="black"/>
-            <path d="M35 72 Q50 80 65 72" stroke="#C4FEC2" strokeWidth="4" strokeLinecap="round" fill="none"/>
-          </svg>
-          <span className="text-2xl font-bold text-black">AleoPass</span>
-        </Link>
-        <nav className="hidden md:flex items-center gap-8">
-          <Link href="/" className="text-black hover:underline font-medium">Home</Link>
-          <Link href="/check-status" className="text-black font-semibold underline">Check Verify Status</Link>
-          <Link href="/verify" className="text-black hover:underline font-medium">Verify</Link>
-          <WalletButton />
-        </nav>
-      </header>
+      <Navigation />
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-8 py-12">
@@ -79,10 +70,12 @@ export default function CheckStatusPage() {
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="aleo1..."
-                className="w-full px-4 py-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black bg-white"
+                className="w-full px-4 py-3 border-2 border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black text-black bg-white font-mono"
               />
               <p className="text-sm text-black/60 mt-2">
-                Enter the Aleo wallet address you want to verify
+                {publicKey 
+                  ? "Your connected wallet address has been auto-filled" 
+                  : "Enter the Aleo wallet address you want to verify"}
               </p>
             </div>
 
