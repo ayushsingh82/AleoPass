@@ -45,14 +45,14 @@ html {
   height: auto !important;
 }
 
-/* Override wallet modal styles that might block scrolling */
-.wallet-adapter-modal-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 9999;
+/* Fix: wallet modal overlay was blocking the entire page when closed */
+#wallet-modal-container,
+#wallet-modal-container * {
+  pointer-events: none;
+}
+#wallet-modal-container [role="dialog"],
+#wallet-modal-container [role="dialog"] * {
+  pointer-events: auto;
 }
 
 /* Prevent wallet modal from blocking body scroll when hidden */

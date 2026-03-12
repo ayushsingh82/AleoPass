@@ -2,7 +2,7 @@
 
 import React, { FC, useMemo, ReactNode } from "react";
 import { WalletProvider as AleoWalletProvider } from "@demox-labs/aleo-wallet-adapter-react";
-import { WalletModalProvider, WalletModal } from "@demox-labs/aleo-wallet-adapter-reactui";
+import { WalletModalProvider, WalletModal, useWalletModal } from "@demox-labs/aleo-wallet-adapter-reactui";
 // OLD: Custom implementation - caused "invalid parameters" error
 // import { LeoWalletAdapter } from "./LeoWalletAdapter";
 // NEW: Use official Leo Wallet adapter package
@@ -17,6 +17,17 @@ import "@demox-labs/aleo-wallet-adapter-reactui/styles.css";
 
 interface WalletProviderProps {
   children: ReactNode;
+}
+
+/** Renders WalletModal only when visible so the overlay never blocks the page when closed. */
+function WalletModalWithContainer() {
+  const { visible } = useWalletModal();
+  if (!visible) return null;
+  return (
+    <div id="wallet-modal-container">
+      <WalletModal container="#wallet-modal-container" />
+    </div>
+  );
 }
 
 export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
@@ -53,7 +64,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({ children }) => {
     >
       <WalletModalProvider>
         {children}
-        <WalletModal />
+        <WalletModalWithContainer />
       </WalletModalProvider>
     </AleoWalletProvider>
   );

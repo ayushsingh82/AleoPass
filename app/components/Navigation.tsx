@@ -9,13 +9,6 @@ export default function Navigation() {
 
   return (
     <div className="sticky top-0 z-[100]">
-      <div className="text-center py-2.5 px-4 text-sm bg-black text-white">
-        Redirect to{" "}
-        <code className="bg-white/20 px-1.5 py-0.5 rounded text-white font-medium">/</code>,{" "}
-        <code className="bg-white/20 px-1.5 py-0.5 rounded text-white font-medium">/check-status</code>, or{" "}
-        <code className="bg-white/20 px-1.5 py-0.5 rounded text-white font-medium">/verify</code>{" "}
-        by editing the route in your browser.
-      </div>
       <header className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto" style={{ backgroundColor: "#C4FEC2" }}>
         <Link href="/" className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
           <svg className="w-10 h-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
