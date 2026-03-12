@@ -64,6 +64,17 @@ npm run dev
 
 Visit `http://localhost:3000` to access the application.
 
+### Persona KYC (optional)
+
+The verify flow supports **Persona** as the first integrated KYC provider. To enable it:
+
+1. Copy `.env.example` to `.env.local`.
+2. Create a [Persona](https://withpersona.com) account and get your **Template ID** and **Environment ID** from the [Persona Dashboard](https://dashboard.withpersona.com) (Inquiry templates → your template → API; Settings → API keys for Environment ID).
+3. Set in `.env.local`:
+   - `NEXT_PUBLIC_PERSONA_TEMPLATE_ID=itpl_xxxx`
+   - `NEXT_PUBLIC_PERSONA_ENVIRONMENT_ID=env_xxxx`
+4. On the Verify page, choose **Persona** and complete the embedded flow. The Aleo address is sent as `referenceId`; on completion the app calls `/api/kyc/persona` (stub). To mint the KYC NFT after verification, implement server-side inquiry verification and Aleo mint in that API route.
+
 ## Project Structure
 
 ```
