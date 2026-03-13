@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import Navigation from "./components/Navigation";
 
@@ -18,109 +17,94 @@ export default function Home() {
             Secure, private, and verifiable.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-black text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-800 transition shadow-lg">
+            <Link
+              href="/verify"
+              className="bg-black text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-800 transition shadow-lg text-center"
+            >
               Start KYC Verification
-            </button>
+            </Link>
           </div>
         </div>
 
-        {/* Features Cards */}
-        <section id="features" className="mt-32">
-          <h2 className="text-4xl font-bold text-black text-center mb-12">Why AleoPass?</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="rounded-2xl bg-white p-8 shadow-xl">
-              <div className="w-14 h-14 rounded-full bg-black flex items-center justify-center mb-6">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold text-black mb-4">Soulbound NFTs</h3>
-              <p className="text-black/70 text-lg">
-                Your KYC verification is minted as a non-transferable soulbound ARC-721 NFT, truly binding identity to your wallet.
-              </p>
+        {/* The flow */}
+        <section id="how-it-works" className="mt-24 max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-black text-center mb-10">How it works</h2>
+          <div className="grid md:grid-cols-2 gap-6 mb-12">
+            <div className="rounded-2xl bg-white p-6 shadow-lg">
+              <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mb-4 text-xl font-bold">1</div>
+              <h3 className="text-xl font-bold text-black mb-2">Connect wallet</h3>
+              <p className="text-black/70">Link your Aleo wallet to AleoPass so your identity is tied to your address.</p>
             </div>
-
-            <div className="rounded-2xl bg-white p-8 shadow-xl">
-              <div className="w-14 h-14 rounded-full bg-black flex items-center justify-center mb-6">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold text-black mb-4">6-Month Expiry</h3>
-              <p className="text-black/70 text-lg">
-                Verification expires after 6 months, forcing periodic re-verification and ensuring up-to-date identity status.
-              </p>
-            </div>
-
-            <div className="rounded-2xl bg-white p-8 shadow-xl">
-              <div className="w-14 h-14 rounded-full bg-black flex items-center justify-center mb-6">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold text-black mb-4">Multi-Provider</h3>
-              <p className="text-black/70 text-lg">
-                Support for Onfido, Persona, and Veriff KYC providers, giving users flexibility in verification methods.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works */}
-        <section id="how-it-works" className="mt-32">
-          <h2 className="text-4xl font-bold text-black text-center mb-12">How It Works</h2>
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="rounded-2xl bg-white p-6 shadow-lg text-center">
-              <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mx-auto mb-4 text-xl font-bold">1</div>
-              <h3 className="text-xl font-bold text-black mb-2">Connect Wallet</h3>
-              <p className="text-black/70">Link your Aleo wallet to AleoPass</p>
-            </div>
-            <div className="rounded-2xl bg-white p-6 shadow-lg text-center">
-              <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
+            <div className="rounded-2xl bg-white p-6 shadow-lg">
+              <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mb-4 text-xl font-bold">2</div>
               <h3 className="text-xl font-bold text-black mb-2">Complete KYC</h3>
-              <p className="text-black/70">Verify your identity with our supported providers</p>
+              <p className="text-black/70">Verify your identity with our supported providers (e.g. Persona).</p>
             </div>
-            <div className="rounded-2xl bg-white p-6 shadow-lg text-center">
-              <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
-              <h3 className="text-xl font-bold text-black mb-2">Mint NFT</h3>
-              <p className="text-black/70">Soulbound NFT is minted to your address</p>
+            <div className="rounded-2xl bg-white p-6 shadow-lg">
+              <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mb-4 text-xl font-bold">3</div>
+              <h3 className="text-xl font-bold text-black mb-2">Mint soulbound NFT</h3>
+              <p className="text-black/70">A non-transferable soulbound NFT is minted to your wallet, proving KYC status on-chain.</p>
             </div>
-            <div className="rounded-2xl bg-white p-6 shadow-lg text-center">
-              <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mx-auto mb-4 text-xl font-bold">4</div>
-              <h3 className="text-xl font-bold text-black mb-2">Get Verified</h3>
-              <p className="text-black/70">Use your verified status across dApps</p>
+            <div className="rounded-2xl bg-white p-6 shadow-lg">
+              <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mb-4 text-xl font-bold">4</div>
+              <h3 className="text-xl font-bold text-black mb-2">Get verified</h3>
+              <p className="text-black/70">Use your verified status and Aleo credit across dApps that integrate AleoPass.</p>
             </div>
           </div>
-        </section>
 
-        {/* API Section */}
-        <section id="api" className="mt-32">
-          <div className="rounded-3xl bg-white p-10 shadow-2xl max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold text-black text-center mb-6">Simple Verification API</h2>
-            <p className="text-black/70 text-center mb-8 text-lg">
-              Any dApp or wallet can verify a user's KYC status with a simple API call
-            </p>
-            <div className="bg-gray-100 rounded-xl p-6 font-mono text-sm overflow-x-auto">
-              <p className="text-gray-600 mb-2"># Request</p>
-              <p className="text-purple-600">GET</p>
-              <p className="text-black">/api/verify?wallet=aleo_address</p>
-              <p className="text-gray-600 mt-4 mb-2"># Response</p>
-              <p className="text-black">{`{`}</p>
-              <p className="text-black ml-4">"verified": true,</p>
-              <p className="text-black ml-4">"expirationBlock": 12766086,</p>
-              <p className="text-black ml-4">"ownerId": "6343611107..."</p>
-              <p className="text-black">{`}`}</p>
+          <h2 className="text-2xl font-bold text-black text-center mb-8">Why AleoPass?</h2>
+          <div className="grid md:grid-cols-3 gap-6 mb-12">
+            <div className="rounded-2xl bg-white p-6 shadow-lg">
+              <h3 className="text-lg font-bold text-black mb-2">Soulbound NFTs</h3>
+              <p className="text-black/70 text-sm">
+                KYC is minted as a non-transferable soulbound ARC-721 NFT, binding identity to your wallet.
+              </p>
+            </div>
+            <div className="rounded-2xl bg-white p-6 shadow-lg">
+              <h3 className="text-lg font-bold text-black mb-2">6-month expiry</h3>
+              <p className="text-black/70 text-sm">
+                Verification expires after 6 months for periodic re-verification and up-to-date status.
+              </p>
+            </div>
+            <div className="rounded-2xl bg-white p-6 shadow-lg">
+              <h3 className="text-lg font-bold text-black mb-2">Multi-provider</h3>
+              <p className="text-black/70 text-sm">
+                Support for Onfido, Persona, and Veriff so users can choose their preferred KYC method.
+              </p>
+            </div>
+          </div>
+
+          <h2 className="text-2xl font-bold text-black text-center mb-6">Verification API</h2>
+          <p className="text-black/70 text-center mb-6">
+            Any dApp or wallet can check a user&apos;s KYC status with a simple API call.
+          </p>
+          <div className="rounded-2xl bg-white p-6 shadow-lg max-w-2xl mx-auto">
+            <div className="bg-black/5 rounded-xl p-4 font-mono text-sm overflow-x-auto text-black">
+              <p className="text-black/60 mb-2"># Request</p>
+              <p>GET /api/verify?wallet=aleo_address</p>
+              <p className="text-black/60 mt-4 mb-2"># Response</p>
+              <p>{`{`}</p>
+              <p className="ml-4">&quot;verified&quot;: true,</p>
+              <p className="ml-4">&quot;expirationBlock&quot;: 12766086,</p>
+              <p className="ml-4">&quot;ownerId&quot;: &quot;6343611107...&quot;</p>
+              <p>{`}`}</p>
             </div>
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="mt-32 text-center">
+        <section className="mt-24 text-center">
           <div className="rounded-3xl bg-white p-12 shadow-2xl max-w-3xl mx-auto">
             <h2 className="text-4xl font-bold text-black mb-4">Ready to Get Verified?</h2>
             <p className="text-black/70 text-lg mb-8">
               Connect your wallet and complete KYC to receive your soulbound verification NFT
             </p>
+            <Link
+              href="/verify"
+              className="inline-block bg-black text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-800 transition"
+            >
+              Go to Verify
+            </Link>
           </div>
         </section>
       </main>

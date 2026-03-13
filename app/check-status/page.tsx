@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import Navigation from "../components/Navigation";
 
@@ -39,7 +40,7 @@ export default function CheckStatusPage() {
       // This would be replaced with actual program call
       setResult({
         verified: false,
-        message: "Status check functionality will be implemented with program integration"
+        message: "Status check will be implemented with program integration. When your KYC is successful, you can mint your soulbound NFT from the Verify page."
       });
     } catch (err: any) {
       setError(err.message || "Failed to check status");
@@ -108,6 +109,11 @@ export default function CheckStatusPage() {
                   </p>
                   {result.message && (
                     <p className="text-black/70 text-sm mt-4">{result.message}</p>
+                  )}
+                  {!result.verified && (
+                    <Link href="/verify" className="inline-block mt-4 text-black font-semibold underline hover:no-underline">
+                      Go to Verify →
+                    </Link>
                   )}
                 </div>
               </div>
