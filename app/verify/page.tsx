@@ -3,10 +3,6 @@
 import { useState, useEffect } from "react";
 import { useWallet } from "@demox-labs/aleo-wallet-adapter-react";
 import Navigation from "../components/Navigation";
-import { PersonaVerification, type PersonaCompletePayload } from "../components/PersonaVerification";
-
-const PERSONA_TEMPLATE_ID = process.env.NEXT_PUBLIC_PERSONA_TEMPLATE_ID ?? "";
-const PERSONA_ENVIRONMENT_ID = process.env.NEXT_PUBLIC_PERSONA_ENVIRONMENT_ID ?? "";
 
 export default function VerifyPage() {
   const { publicKey } = useWallet();
@@ -15,7 +11,10 @@ export default function VerifyPage() {
   const [selectedProvider, setSelectedProvider] = useState<string>("");
   const [documents, setDocuments] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
-  const [personaComplete, setPersonaComplete] = useState<PersonaCompletePayload | null>(null);
+  const [personaFormSubmitted, setPersonaFormSubmitted] = useState(false);
+  const [kycFullName, setKycFullName] = useState("");
+  const [kycIdType, setKycIdType] = useState("");
+  const [kycDocFiles, setKycDocFiles] = useState<File[]>([]);
 
   // Auto-fill address when wallet is connected
   useEffect(() => {
@@ -25,45 +24,29 @@ export default function VerifyPage() {
   }, [publicKey, address]);
 
   const providers = [
-    { id: "onfido", name: "Onfido" },
-    { id: "persona", name: "Persona" },
-    { id: "veriff", name: "Veriff" },
+    { id: "onfido", name: "Onfido", comingSoon: true },
+    { id: "persona", name: "Persona", comingSoon: false },
+    { id: "veriff", name: "Veriff", comingSoon: true },
   ];
 
   const handleNext = () => {
     if (step === 1 && address.trim()) {
       setStep(2);
     } else if (step === 2 && selectedProvider) {
-      setPersonaComplete(null);
+      setPersonaFormSubmitted(false);
       setStep(3);
     }
   };
 
   const handleBack = () => {
     if (step > 1) {
+      if (step === 3 && selectedProvider === "persona") setPersonaFormSubmitted(false);
       setStep(step - 1);
     }
   };
 
-  const handlePersonaComplete = async (payload: PersonaCompletePayload) => {
-    setPersonaComplete(payload);
-    try {
-      const res = await fetch("/api/kyc/persona", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          inquiryId: payload.inquiryId,
-          status: payload.status,
-          address: address.trim(),
-        }),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        console.error("KYC API error:", err);
-      }
-    } catch (e) {
-      console.error("Failed to submit KYC result:", e);
-    }
+  const handlePersonaFormSubmit = () => {
+    setPersonaFormSubmitted(true);
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -181,20 +164,26 @@ export default function VerifyPage() {
                   {providers.map((provider) => (
                     <button
                       key={provider.id}
-                      onClick={() => setSelectedProvider(provider.id)}
+                      type="button"
+                      onClick={() => !provider.comingSoon && setSelectedProvider(provider.id)}
+                      disabled={provider.comingSoon}
                       className={`p-4 border-2 rounded-lg text-left transition ${
-                        selectedProvider === provider.id
-                          ? "border-black bg-black/5"
-                          : "border-gray-300 hover:border-black/50"
+                        provider.comingSoon
+                          ? "border-gray-200 bg-gray-50 cursor-not-allowed opacity-75"
+                          : selectedProvider === provider.id
+                            ? "border-black bg-black/5"
+                            : "border-gray-300 hover:border-black/50"
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-black">{provider.name}</span>
-                        {selectedProvider === provider.id && (
+                        {provider.comingSoon ? (
+                          <span className="text-sm text-gray-500 font-medium">Coming soon</span>
+                        ) : selectedProvider === provider.id ? (
                           <svg className="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                           </svg>
-                        )}
+                        ) : null}
                       </div>
                     </button>
                   ))}
@@ -223,16 +212,13 @@ export default function VerifyPage() {
             <div className="space-y-6">
               {selectedProvider === "persona" ? (
                 <>
-                  {personaComplete ? (
+                  {personaFormSubmitted ? (
                     <div className="p-6 bg-green-50 border-2 border-green-200 rounded-lg">
-                      <p className="text-green-800 font-semibold mb-2">Verification completed</p>
-                      <p className="text-green-700 text-sm mb-2">
-                        Inquiry ID: <code className="bg-green-100 px-1 rounded">{personaComplete.inquiryId}</code>
+                      <p className="text-green-800 font-semibold mb-2">KYC under verification</p>
+                      <p className="text-green-700 text-sm mb-4">
+                        Your documents and information have been submitted. You will receive the verification result within 24 hours.
                       </p>
-                      <p className="text-green-700 text-sm">
-                        Status: {personaComplete.status}. Your KYC result has been recorded. An NFT may be minted after approval.
-                      </p>
-                      <div className="flex gap-4 mt-4">
+                      <div className="flex gap-4">
                         <button
                           onClick={handleBack}
                           className="flex-1 bg-gray-200 text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
@@ -244,7 +230,10 @@ export default function VerifyPage() {
                             setStep(1);
                             setAddress("");
                             setSelectedProvider("");
-                            setPersonaComplete(null);
+                            setPersonaFormSubmitted(false);
+                            setKycFullName("");
+                            setKycIdType("");
+                            setKycDocFiles([]);
                           }}
                           className="flex-1 bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition"
                         >
@@ -252,22 +241,61 @@ export default function VerifyPage() {
                         </button>
                       </div>
                     </div>
-                  ) : PERSONA_TEMPLATE_ID && PERSONA_ENVIRONMENT_ID ? (
+                  ) : (
                     <>
                       <div>
                         <label className="block text-black font-semibold mb-2">
-                          Persona verification
+                          Submit your details for verification
                         </label>
                         <p className="text-black/70 text-sm mb-4">
-                          Complete identity verification in the flow below. Your wallet address is linked as the reference.
+                          Provide your information and documents. Your wallet address is linked as the reference.
                         </p>
-                        <PersonaVerification
-                          templateId={PERSONA_TEMPLATE_ID}
-                          environmentId={PERSONA_ENVIRONMENT_ID}
-                          referenceId={address.trim()}
-                          onComplete={handlePersonaComplete}
-                          onCancel={() => {}}
-                        />
+                        <div className="space-y-4">
+                          <div>
+                            <label className="block text-sm font-medium text-black/80 mb-1">Full name</label>
+                            <input
+                              type="text"
+                              value={kycFullName}
+                              onChange={(e) => setKycFullName(e.target.value)}
+                              placeholder="e.g. John Doe"
+                              className="w-full px-4 py-2 border border-black/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/30 text-black bg-white"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-black/80 mb-1">ID type</label>
+                            <select
+                              value={kycIdType}
+                              onChange={(e) => setKycIdType(e.target.value)}
+                              className="w-full px-4 py-2 border border-black/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/30 text-black bg-white"
+                            >
+                              <option value="">Select document type</option>
+                              <option value="passport">Passport</option>
+                              <option value="national_id">National ID</option>
+                              <option value="drivers_license">Driver&apos;s license</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-black/80 mb-1">Document (optional)</label>
+                            <div className="border-2 border-dashed border-black/30 rounded-lg p-4 text-center">
+                              <input
+                                type="file"
+                                multiple
+                                accept="image/*,.pdf"
+                                onChange={(e) => e.target.files && setKycDocFiles(Array.from(e.target.files))}
+                                className="hidden"
+                                id="persona-doc-upload"
+                              />
+                              <label htmlFor="persona-doc-upload" className="cursor-pointer text-sm text-black/70">
+                                Click to upload ID or passport (PDF, PNG, JPG)
+                              </label>
+                              {kycDocFiles.length > 0 && (
+                                <p className="mt-2 text-xs text-black/60">
+                                  {kycDocFiles.length} file(s) selected
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                       <div className="flex gap-4">
                         <button
@@ -276,23 +304,14 @@ export default function VerifyPage() {
                         >
                           Back
                         </button>
+                        <button
+                          onClick={handlePersonaFormSubmit}
+                          className="flex-1 bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition"
+                        >
+                          Submit for verification
+                        </button>
                       </div>
                     </>
-                  ) : (
-                    <div className="p-6 bg-amber-50 border-2 border-amber-200 rounded-lg">
-                      <p className="text-amber-800 font-semibold mb-2">Persona not configured</p>
-                      <p className="text-amber-700 text-sm mb-4">
-                        Add <code className="bg-amber-100 px-1 rounded">NEXT_PUBLIC_PERSONA_TEMPLATE_ID</code> and{" "}
-                        <code className="bg-amber-100 px-1 rounded">NEXT_PUBLIC_PERSONA_ENVIRONMENT_ID</code> to{" "}
-                        <code className="bg-amber-100 px-1 rounded">.env.local</code>. Copy from <code className="bg-amber-100 px-1 rounded">.env.example</code>.
-                      </p>
-                      <button
-                        onClick={handleBack}
-                        className="bg-gray-200 text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
-                      >
-                        Back
-                      </button>
-                    </div>
                   )}
                 </>
               ) : (

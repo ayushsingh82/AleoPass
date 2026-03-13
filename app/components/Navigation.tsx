@@ -21,12 +21,6 @@ export default function Navigation() {
         </Link>
         <nav className="hidden md:flex items-center gap-8">
           <Link
-            href="/"
-            className={pathname === "/" ? "text-black font-semibold underline" : "text-black hover:underline font-medium"}
-          >
-            Home
-          </Link>
-          <Link
             href="/check-status"
             className={
               pathname === "/check-status"

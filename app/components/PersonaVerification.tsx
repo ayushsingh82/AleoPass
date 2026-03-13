@@ -30,6 +30,7 @@ export function PersonaVerification({
   onLoad,
 }: PersonaVerificationProps) {
   const clientRef = useRef<{ open: () => void; destroy: () => void } | null>(null);
+  const readyRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -37,7 +38,16 @@ export function PersonaVerification({
     if (!templateId || !environmentId || !referenceId) return;
 
     let cancelled = false;
+    readyRef.current = false;
     setError(null);
+
+    const loadTimeout = setTimeout(() => {
+      if (cancelled || readyRef.current) return;
+      setLoading(false);
+      setError(
+        "Persona verification is taking too long to load. In the Persona dashboard: use Sandbox environment, add localhost to allowed domains (Step 3), and ensure the template is published. Then try again."
+      );
+    }, 20000);
 
     (async () => {
       try {
@@ -53,8 +63,10 @@ export function PersonaVerification({
           },
           onReady: () => {
             if (cancelled) return;
+            readyRef.current = true;
             clientRef.current = client;
             setLoading(false);
+            setError(null);
             client.open();
           },
           onComplete: ({ inquiryId, status, fields }: PersonaCompletePayload) => {
@@ -67,6 +79,7 @@ export function PersonaVerification({
           },
           onError: (err: unknown) => {
             if (cancelled) return;
+            setLoading(false);
             setError(err instanceof Error ? err.message : String(err));
             onError?.(err);
           },
@@ -76,6 +89,9 @@ export function PersonaVerification({
         client.render();
       } catch (err) {
         if (!cancelled) {
+          readyRef.current = true;
+          clearTimeout(loadTimeout);
+          setLoading(false);
           const msg = err instanceof Error ? err.message : String(err);
           setError(msg);
           onError?.(err);
@@ -85,6 +101,7 @@ export function PersonaVerification({
 
     return () => {
       cancelled = true;
+      clearTimeout(loadTimeout);
       if (clientRef.current && "destroy" in clientRef.current) {
         try {
           (clientRef.current as { destroy: () => void }).destroy();
